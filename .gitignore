@@ -1,0 +1,17 @@
+.DS_Store
+/vendor
+/dist
+/local-archive
+/.vscode/*.sql
+/.vscode/settings.json
+/.vscode/launch.json
+/captive-core*
+.idea
+debug
+.bundle
+*.swp
+*.crt
+*.csr
+*.key
+*.txt
+stellar-etl
