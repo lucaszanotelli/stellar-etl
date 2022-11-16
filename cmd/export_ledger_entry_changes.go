@@ -34,7 +34,7 @@ be exported.`,
 		endNum, strictExport, isTest, _ := utils.MustCommonFlags(cmd.Flags(), cmdLogger)
 		cmdLogger.StrictExport = strictExport
 		env := utils.GetEnvironmentDetails(isTest)
-		archive, _ := utils.CreateHistoryArchiveClient(env.ArchiveURLs)
+		archive, _ := utils.CreateHistoryArchiveClient(env.ArchiveURLs) // to verify ledger
 		execPath, configPath, startNum, batchSize, outputFolder := utils.MustCoreFlags(cmd.Flags(), cmdLogger)
 		exportAccounts, exportOffers, exportTrustlines, exportPools, exportBalances := utils.MustExportTypeFlags(cmd.Flags(), cmdLogger)
 		// gcsBucket, gcpCredentials := utils.MustGcsFlags(cmd.Flags(), cmdLogger)
@@ -130,70 +130,70 @@ be exported.`,
 								}
 							}
 						}
-						// 	case xdr.LedgerEntryTypeClaimableBalance: ///// DONE
-						// 		for _, change := range changes {
-						// 			entry, _, _, _ := utils.ExtractEntryFromChange(change)
-						// 			balance, err := transform.TransformClaimableBalance(change)
-						// 			if err != nil {
-						// 				cmdLogger.LogError(fmt.Errorf("error transforming balance entry last updated at %d: %s", entry.LastModifiedLedgerSeq, err))
-						// 				continue
-						// 			}
-						// 			transformedOutputs.Claimable_balances = append(transformedOutputs.Claimable_balances, balance)
+					case xdr.LedgerEntryTypeClaimableBalance: ///// DONE
+						for _, change := range changes {
+							entry, _, _, _ := utils.ExtractEntryFromChange(change)
+							balance, err := transform.TransformClaimableBalance(change)
+							if err != nil {
+								cmdLogger.LogError(fmt.Errorf("error transforming balance entry last updated at %d: %s", entry.LastModifiedLedgerSeq, err))
+								continue
+							}
+							transformedOutputs.Claimable_balances = append(transformedOutputs.Claimable_balances, balance)
 
-						// 			if ok, actualLedger := utils.LedgerIsCheckpoint(entry.LastModifiedLedgerSeq); ok {
-						// 				x := verifyOutputs[actualLedger]
-						// 				x.Claimable_balances = append(x.Claimable_balances, balance)
-						// 				verifyOutputs[actualLedger] = x
-						// 			}
-						// 		}
-						// 		case xdr.LedgerEntryTypeOffer: ///// DONE
-						// 			for _, change := range changes {
-						// 				entry, _, _, _ := utils.ExtractEntryFromChange(change)
-						// 				offer, err := transform.TransformOffer(change)
-						// 				if err != nil {
-						// 					cmdLogger.LogError(fmt.Errorf("error transforming offer entry last updated at %d: %s", entry.LastModifiedLedgerSeq, err))
-						// 					continue
-						// 				}
-						// 				transformedOutputs.Offers = append(transformedOutputs.Offers, offer)
+							if ok, actualLedger := utils.LedgerIsCheckpoint(entry.LastModifiedLedgerSeq); ok {
+								x := verifyOutputs[actualLedger]
+								x.Claimable_balances = append(x.Claimable_balances, balance)
+								verifyOutputs[actualLedger] = x
+							}
+						}
+					case xdr.LedgerEntryTypeOffer: ///// DONE
+						for _, change := range changes {
+							entry, _, _, _ := utils.ExtractEntryFromChange(change)
+							offer, err := transform.TransformOffer(change)
+							if err != nil {
+								cmdLogger.LogError(fmt.Errorf("error transforming offer entry last updated at %d: %s", entry.LastModifiedLedgerSeq, err))
+								continue
+							}
+							transformedOutputs.Offers = append(transformedOutputs.Offers, offer)
 
-						// 				if ok, actualLedger := utils.LedgerIsCheckpoint(entry.LastModifiedLedgerSeq); ok {
-						// 					x := verifyOutputs[actualLedger]
-						// 					x.Offers = append(x.Offers, offer)
-						// 					verifyOutputs[actualLedger] = x
-						// 				}
-						// 			}
-						// 		case xdr.LedgerEntryTypeTrustline: ///// DONE
-						// 			for _, change := range changes {
-						// 				entry, _, _, _ := utils.ExtractEntryFromChange(change)
-						// 				trust, err := transform.TransformTrustline(change)
-						// 				if err != nil {
-						// 					cmdLogger.LogError(fmt.Errorf("error transforming trustline entry last updated at %d: %s", entry.LastModifiedLedgerSeq, err))
-						// 					continue
-						// 				}
-						// 				transformedOutputs.Trustlines = append(transformedOutputs.Trustlines, trust)
+							if ok, actualLedger := utils.LedgerIsCheckpoint(entry.LastModifiedLedgerSeq); ok {
+								x := verifyOutputs[actualLedger]
+								x.Offers = append(x.Offers, offer)
+								verifyOutputs[actualLedger] = x
+							}
+						}
+					case xdr.LedgerEntryTypeTrustline: ///// DONE
+						for _, change := range changes {
+							entry, _, _, _ := utils.ExtractEntryFromChange(change)
+							trust, err := transform.TransformTrustline(change)
+							if err != nil {
+								cmdLogger.LogError(fmt.Errorf("error transforming trustline entry last updated at %d: %s", entry.LastModifiedLedgerSeq, err))
+								continue
+							}
+							transformedOutputs.Trustlines = append(transformedOutputs.Trustlines, trust)
 
-						// 				if ok, actualLedger := utils.LedgerIsCheckpoint(entry.LastModifiedLedgerSeq); ok {
-						// 					x := verifyOutputs[actualLedger]
-						// 					x.Trustlines = append(x.Trustlines, trust)
-						// 					verifyOutputs[actualLedger] = x
-						// 				}
-						// 			}
-						// case xdr.LedgerEntryTypeLiquidityPool: ///// DONE
-						// 	for _, change := range changes {
-						// 		entry, _, _, _ := utils.ExtractEntryFromChange(change)
-						// 		pool, err := transform.TransformPool(change)
-						// 		if err != nil {
-						// 			cmdLogger.LogError(fmt.Errorf("error transforming liquidity pool entry last updated at %d: %s", entry.LastModifiedLedgerSeq, err))
-						// 			continue
-						// 		}
-						// 		transformedOutputs.Liquidity_pools = append(transformedOutputs.Liquidity_pools, pool)
+							if ok, actualLedger := utils.LedgerIsCheckpoint(entry.LastModifiedLedgerSeq); ok {
+								x := verifyOutputs[actualLedger]
+								x.Trustlines = append(x.Trustlines, trust)
+								verifyOutputs[actualLedger] = x
+							}
+						}
+					case xdr.LedgerEntryTypeLiquidityPool: ///// DONE
+						for _, change := range changes {
+							entry, _, _, _ := utils.ExtractEntryFromChange(change)
+							pool, err := transform.TransformPool(change)
+							if err != nil {
+								cmdLogger.LogError(fmt.Errorf("error transforming liquidity pool entry last updated at %d: %s", entry.LastModifiedLedgerSeq, err))
+								continue
+							}
+							transformedOutputs.Liquidity_pools = append(transformedOutputs.Liquidity_pools, pool)
 
-						// 		if ok, actualLedger := utils.LedgerIsCheckpoint(entry.LastModifiedLedgerSeq); ok {
-						// 			x := verifyOutputs[actualLedger]
-						// 			x.Liquidity_pools = append(x.Liquidity_pools, pool)
-						// 			verifyOutputs[actualLedger] = x
-						// 		}
-						// 	}
+							if ok, actualLedger := utils.LedgerIsCheckpoint(entry.LastModifiedLedgerSeq); ok {
+								x := verifyOutputs[actualLedger]
+								x.Liquidity_pools = append(x.Liquidity_pools, pool)
+								verifyOutputs[actualLedger] = x
+							}
+						}
 					}
 				}
 

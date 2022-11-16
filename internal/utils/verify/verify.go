@@ -387,6 +387,9 @@ func addAccountsToStateVerifier(ctx context.Context,
 	}
 
 	for _, row := range accounts {
+		if row.Deleted {
+			break
+		}
 		var inflationDest *xdr.AccountId
 		if row.InflationDestination != "" {
 			t := xdr.MustAddress(row.InflationDestination)
