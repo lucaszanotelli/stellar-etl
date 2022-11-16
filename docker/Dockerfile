@@ -1,4 +1,4 @@
-docker/Dockerfile# docker image stellar/stellar-core version 19, pinned by sha digest
+# docker image stellar/stellar-core version 19, pinned by sha digest
 FROM stellar/stellar-core@sha256:b4e85991ea5a72667a147e2d49018269c252c096dfc2a845d13142e615ea4dd3
 
 # define gopath and path
